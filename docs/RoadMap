@@ -1,0 +1,363 @@
+O que é RAG?
+
+Maior benefício do RAG é CONTROLAR O RACIOCÍNIO DO MODELO.
+
+RAG é um Architectural Pattern, assim como MVC, CQRS, Event Sourcing.
+👉 RAG é um padrão de recuperação + raciocínio.
+
+🎯 Por que o RAG existe?
+Originalmente, para resolver 3 grandes limitações dos LLMs:
+
+LLMs não sabem:
+seus dados financeiros
+seu CRM
+seu ERP
+seu sistema prisional
+seus contratos
+
+Sem RAG → o modelo inventa.
+Com RAG → ele consulta sua fonte.
+
+👉 Isso muda TUDO.
+Você sai de:
+"modelo opinativo"
+
+para
+"modelo baseado em evidência"
+
+Isso é arquitetura de sistema crítico.
+
+Problemas que o RAG resolve:
+Janela de contexto (tokens)
+Imagine mandar:
+10 mil despesas
+contratos
+logs
+PDFs
+
+A cada pergunta.
+👉 inviável.
+
+RAG resolve com:
+Retrieval seletivo
+Busca só o que importa.
+
+👉 1️⃣ Determinísticas (matemáticas / exatas)
+👉 2️⃣ Semânticas (interpretação / busca inteligente)
+👉 2️⃣ Analíticas (insights / analise de dados)
+
+O que aprendemos com este projeto?
+1️⃣ LLM não é calculadora
+2️⃣ RAG não serve só para "buscar texto"
+
+
+Pilares do RAG:
+1. Query Understanding - Query Parsing / Query Planning:
+    Antes de buscar qualquer coisa, primeiro, você entende a pergunta do usuário.
+    "Quanto paguei de aluguel no último trimestre?"
+    O sistema transforma em:
+
+    operation: sum
+    categoria: aluguel
+    periodo: Q4
+    status: pago
+
+Isso é query engine
+
+2. Retrieval inteligente:
+    Não basta vetor.
+    Hoje existem 3 camadas modernas:
+
+    ✔️ Semantic search (vetor) - Traduzir infos da pergunta para as informações que constam no banco de dados.
+    "mac novo" → "MacBook Pro 16"
+
+    ✔️ Structured filtering - Dados financeiros não podem ser tratados como documentos, são dados estruturados.
+    Vetores sozinhos são ruins aqui.
+    structured filter → depois vetor
+
+    ✔️ Hybrid Search (nível alto)
+    Combina:
+    - filtro SQL-like
+    - vetores
+    - keyword
+    - metadata
+
+3. Tool Selection
+    👉 Nem toda pergunta deve ir para o LLM.
+    "Qual o total?"
+    Se mandar pro modelo:
+        - 💥 risco enorme.
+        - LLM não é calculadora confiável.
+
+    Então fazemos:
+
+    👉 Tool Routing
+    Decidimos:
+        - vetor?
+        - SQL?
+        - cálculo?
+        - função?
+        - API?
+
+4. Grounding
+    👉 obrigar o modelo a responder baseado em evidência.
+    Seu prompt faz isso: "Use apenas as despesas abaixo para responder."
+    Isso é grounding.
+    Sem isso:
+        - modelo inventa.
+
+5. Deterministic Layer
+    Isso é nível arquitetura enterprise.
+    Sempre que algo precisa ser:
+        - somado
+        - contado
+        - ordenado
+        - comparado
+
+    👉 NÃO USE O LLM.
+    Use código.
+    LLM apenas:
+        - transforma o resultado em linguagem natural.
+        - Isso reduz erro para quase zero.
+
+👉 Isso já é um embrião de um AI Data Engine.
+Não é mais um chatbot.
+
+Você está criando um sistema que:
+    - entende perguntas
+    - decide estratégia
+    - consulta dados
+    - executa cálculos
+    - gera linguagem
+
+
+👉 RAG → Tool Calling → Agents → AI Systems
+
+✅ Reduz alucinação
+✅ Permite dados privados
+✅ Controla raciocínio
+✅ Escala conhecimento
+✅ Evita fine-tuning desnecessário
+✅ Cria sistemas auditáveis
+✅ Permite explainability
+
+Explainability é gigante.
+
+
+Dicas:
+👉 Não transforme tudo em vetor.
+Vetores NÃO são banco universal.
+
+Use vetor para:
+    - linguagem
+    - semântica
+    - ambiguidade
+
+Use estrutura para:
+    - números
+    - datas
+    - filtros
+
+Arquitetura híbrida sempre vence.
+
+Onde entra o LangChain?
+LangChain é uma biblioteca de engenharia de aplicações com LLM.
+
+Ele não é um modelo,
+não é um banco vetorial,
+não é uma AI.
+
+👉 Ele é um orquestrador.
+
+Pense assim:
+
+OpenAI = motor
+FAISS = índice
+Python = peças
+LangChain = chassi que conecta tudo
+
+Ele conecta:
+    - LLM
+    - vector DB
+    - memória
+    - tools
+    - agentes
+    - prompts
+
+sem você precisar escrever tanta infraestrutura.
+
+1️⃣ Criar RAG mais rápido
+    Sem LangChain você escreve:
+        - embedding pipeline
+        - search
+        - prompt assembly
+        - tool routing
+
+2️⃣ Criar Agents
+
+Tipo:
+    - "Se for cálculo → usa função Python
+    - Se for documento → busca no vetor
+    - Se for clima → chama API"
+
+LangChain já tem isso pronto.
+
+3️⃣ Tool Calling simplificado
+    - tools = [
+        - calculator,
+        - sql_query,
+        - rag_search
+    ]
+O agente decide sozinho qual usar.
+
+4️⃣ Padronizar arquitetura
+
+Ele cria padrões como:
+👉 Chains
+👉 Retrievers
+👉 Agents
+👉 Memory
+
+Isso ajuda times grandes.
+
+Ele sofre de um fenômeno chamado:
+
+🔴 “framework magic”
+Funciona…
+até parar de funcionar.
+
+Aí você não sabe:
+    - onde está o bug
+    - quem chamou quem
+    - como otimizar
+    - como reduzir custo
+
+Porque ele abstrai demais.
+
+👉 O que arquitetos experientes fazem hoje?
+👉 LangChain-free architectures
+
+Ou seja:
+    - OpenAI SDK direto
+    - FAISS direto
+    - Python puro
+    - tool routing manual
+
+👉 Quando EU recomendo LangChain?
+✔️ Prototipagem MUITO rápida
+✔️ Hackathons
+✔️ MVP em dias
+✔️ Times juniores
+
+Ele acelera.
+
+👉 Quando NÃO recomendo?
+
+Se você quer:
+
+✅ controle de custo
+✅ previsibilidade
+✅ performance
+✅ debug fácil
+✅ arquitetura limpa
+✅ evitar dependência
+
+
+Arquitetura moderna de AI está indo para:
+👉 “Thin orchestration”
+
+Ou seja:
+
+Pouco framework.
+Mais controle.
+
+LangChain não te faz sênior.
+Entender arquitetura faz.
+
+Não use LangChain agora.
+
+Continue:
+
+👉 OpenAI SDK
+👉 FAISS
+👉 pipelines próprios
+👉 deterministic layer
+
+Você está montando algo com cara de:
+
+👉 AI Data Platform
+
+Não de chatbot.
+
+_________________________________________________________
+
+Vamos começar por organizar um pipeline determinístico e um pipeline semântico.
+Raciocínio:
+    O modelo precisa entender a pergunta e a resposta.
+    "Quanto paguei de aluguel no último trimestre?"
+    O sistema precisa entender:
+    - a pergunta
+    - a resposta
+    - o contexto
+_________________________________________________________
+
+
+⭐ Próxima melhoria (MUITO recomendada)
+
+1. Query Planning
+Hoje você ainda depende do LLM para detectar intenção.
+
+Onde o modelo decide:
+"isso é cálculo"
+"isso é busca"
+"isso é análise"
+
+
+Falando em Persistir embeddings + FAISS, temos um problema que é o custo de armazenamento.
+
+👉 Persistir embeddings + FAISS.
+Construção de um motor financeiro AI
+
+⭐ Ordem ideal:
+1️⃣ Separar pipelines (acabamos de fazer)
+2️⃣ Persistir FAISS
+3️⃣ Criar handlers (total, média, max…)
+4️⃣ Melhorar parser
+5️⃣ Criar agregações financeiras
+6️⃣ Virar um agente
+
+
+👉 Como eliminar 80% das chamadas ao LLM
+
+
+🔵 Perguntas SEMÂNTICAS (interpretação):
+👉 "Tive muitas despesas com cartão este ano?"
+👉 "Quais foram minhas maiores despesas?"
+👉 "Com quais empresas eu mais gasto?"
+👉 "Minhas despesas estão concentradas em qual categoria?"
+👉 "Existe algum gasto fora do padrão?"
+👉 "Quais despesas parecem recorrentes?"
+👉 "Tenho gastos com educação?"
+👉 "O que estou pagando todo mês?"
+👉 "Quais despesas são pessoais e quais parecem empresariais?"
+👉 "Existe alguma despesa que parece desnecessária?"
+
+🟢 Perguntas DETERMINÍSTICAS (matemáticas)
+👉 "Qual o total gasto no ano?"
+👉 "Quanto gastei com cartão de crédito?"
+👉 "Qual foi o total pago?"
+👉 "Quanto ainda tenho pendente?"
+👉 "Qual minha maior despesa?"
+👉 "Qual minha menor despesa?"
+👉 "Quantas despesas já paguei?"
+👉 "Quantas estão em aberto?"
+👉 "Qual a média mensal de gastos?"
+👉 "Quanto gastei em janeiro?"
+
+🟣 Perguntas ANALÍTICAS
+👉 "Meu gasto está aumentando ao longo dos meses?"
+👉 "Qual tendência dos meus gastos?"
+👉 "Se eu continuar assim, quanto gastarei no ano?"
+👉 "Qual categoria cresceu mais?"
+👉 "Meu custo fixo mensal?"
+👉 "Quanto do meu gasto é recorrente vs variável?"
